@@ -1,10 +1,6 @@
 from flask import Flask, request, redirect, render_template
 from flask_sqlalchemy import SQLAlchemy
 import os
-#import jinja2
-
-#template_dir = os.path.join(os.path.dirname(__file__), 'templates')
-#jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir))
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -21,19 +17,22 @@ class Blog(db.Model):
         self.title = title
         self.entry = entry
 
+    def __str__(self):
+        return '<Blog {0}>'.format(self.name)  ##to see in python shell?
+
 
 #@app.route('/newpost') 
 #def newpost():
-#    title = request.form['title']
-#    entry = request.form['entry']
+#    new_title = request.form['title']
+#    new_entry = request.form['entry']
 #    if len(title) == 0 or len(entry) == 0:
 #         redirect('/blog')
 #    else:
-#        new_title = Blog(title)
-#        new_entry = Blog(entry)
-#        db.sessions.add(new_title, new_task) ###how to enter mulitiply cols of info into table?
+#        next_title = Blog(new_title)
+#        next_entry = Blog(new_entry)
+#        db.sessions.add(next_title, next_task) ###how to enter mulitiply cols of info into table?
 #        db.session.commit()  
-
+#
 #    return render_template("blog.html")
 
 #@app.route('/single_blog')
@@ -45,15 +44,11 @@ class Blog(db.Model):
 
     
 
-@app.route('/') # should it be '/blog'? no bc function invokes blog.html...I think?
+@app.route('/') 
 def blog():
-    #title = request.form['title']
-    #entry = request.form['entry']
-    #template = jinja_env.get_template('blog.html')
-    #return template.render()   ## lines 43-46 from class 6 prep on jinja2
     
-    blogs = Blog.query.all()
-    return render_template("blog.html", title="Blog", blogs=blogs) #if not using jinja
+    blogs = Blog.query.all()  # Blog.query.get(new_title) to get id of the new_title 
+    return render_template("blog.html", blogs=blogs) 
 
 if __name__ == '__main__':
     app.run()

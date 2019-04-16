@@ -2,29 +2,24 @@
 
 {% block content %}
 <nav>
-    <ul>
+    <ul><display: inline-block>
     <li>
         <a href="blog.html">Main Blog Page</a>
     </li>
     <li>
         <a href="newpost.html">Add an entry</a>
     </li>          
-    </ul>
+    </ul></display: inline-block>
 </nav>
     
-<h1><centered><strong>Build a Blog</strong></centered></h1>
+<h1><center><strong>Build a Blog</strong></center></h1>
 
 <ul>
-    {% for blog in blogs %}
-    <li><h2>{{blog.title}}</h2></li>
-    <li>{{blog.entry}}</li>
+    {% for blog in blogs: %}
+        <li><h3>{{blog.title}}</h3></li>
+        <li>{{blog.entry}}
+        </li>
     {% endfor %}
 </ul>
-
-<!--how to display the table of data by key_id....something like this?...
-{% for i in id %}
-    <p>{%'blog[i].title'%}</p>
-    <p>{%'blog[i].entry'%}</p> -->
-{% endfor %}
 
 {% endblock %}
