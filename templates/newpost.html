@@ -15,13 +15,21 @@
 <form method='post'>
     <label>
         Title for your new blog:
-        <input type="text" name='title' />
+        <input type="text" name='new_title' />
     </label>
     <label>Your new blog:</label>
-    <input textarea= rows="10" cols="50" name='entry' />
+    <input textarea=rows="10" cols="50" type="text" name='new_entry' />
     <br>
     <input type="submit" value="Add Entry">
 </form>
+
+
+<!--Not sure if this is correct, need to test when running
+    {% if new_entry|length == 0 or new_title|length == 0 %}:
+    <form method="POST" action="/new"></form>-->
+
+
+
 
 
 

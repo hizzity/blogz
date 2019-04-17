@@ -18,37 +18,37 @@ class Blog(db.Model):
         self.entry = entry
 
     def __str__(self):
-        return '<Blog {0}>'.format(self.name)  ##to see in python shell?
+        return '<Blog {0}>'.format(self.name)  ##to see in python shell? not nec to run site
+
+@app.route('/eachblog', methods=['POST'])
+# when click on a blog, 
+# get id number, use that to 
+# display the title and entry
 
 
-#@app.route('/newpost') 
-#def newpost():
-#    new_title = request.form['title']
-#    new_entry = request.form['entry']
-#    if len(title) == 0 or len(entry) == 0:
-#         redirect('/blog')
-#    else:
-#        next_title = Blog(new_title)
-#        next_entry = Blog(new_entry)
-#        db.sessions.add(next_title, next_task) ###how to enter mulitiply cols of info into table?
-#        db.session.commit()  
-#
-#    return render_template("blog.html")
 
-#@app.route('/single_blog')
-# when click on a blog, get id number, use that to display the title and entry
-#def one_entry():
-    #get title from the data table title = blog[i].title
-    #get entry from the data table entry = blog[i].entry
-    # return rendered_template("single_blog.html", title=title, entry=entry)
+@app.route('/new', methods=['POST','GET']) 
+def newpost():
+    return render_template("newpost.html")
+## after info entered: go to single_blog.html, with title and entry passed
+# ...need new function within this route? or need to route?
 
-    
+# if request.method == 'GET':
+#    redirect ('/newpost.html')
 
-@app.route('/') 
-def blog():
-    
+
+
+
+@app.route('/', methods=['POST','GET']) 
+def index():
+    if request.method == 'POST':
+        new_title = request.form['new_title']
+        new_entry = request.form['new_entry']
+        db.session.add(new_title, new_entry)
+        db.session.commit()
     blogs = Blog.query.all()  # Blog.query.get(new_title) to get id of the new_title 
-    return render_template("blog.html", blogs=blogs) 
+    return render_template("blog.html", blogs=blogs)
+
 
 if __name__ == '__main__':
     app.run()

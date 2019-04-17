@@ -1,25 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <nav>
-    <ul><display: inline-block>
+    <ul>
     <li>
         <a href="blog.html">Main Blog Page</a>
     </li>
     <li>
         <a href="newpost.html">Add an entry</a>
     </li>          
-    </ul></display: inline-block>
+    </ul>
 </nav>
     
 <h1><center><strong>Build a Blog</strong></center></h1>
-
 <ul>
-    {% for blog in blogs: %}
-        <li><h3>{{blog.title}}</h3></li>
-        <li>{{blog.entry}}
-        </li>
-    {% endfor %}
-</ul>
+        
+        {% for blog in blogs: %}
+            <li><h3><a href ="single_blog.html">{{blog.title}}</a></h3></li>
+            <li>{{blog.entry}}
+                <!--{{blog.id}} this does give the correct id number-->
+            </li>
+        {% endfor %}
+    </ul>
+
 
 {% endblock %}
