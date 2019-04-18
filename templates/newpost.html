@@ -1,36 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-<nav>
-    <ul>
-    <li>
-        <a href="blog.html">Main Blog Page</a>
-    </li>
-    <li>
-        <a href="newpost.html">Add an entry</a>
-    </li>          
-    </ul>
-</nav>
+
+
 <h1><centered><strong>Add a Blog Entry</strong></centered></h1>
-<form method='post'>
+<form action="/new" method='post'>
     <label>
         Title for your new blog:
-        <input type="text" name='new_title' />
     </label>
-    <label>Your new blog:</label>
-    <input textarea=rows="10" cols="50" type="text" name='new_entry' />
+        <br>
+    <input type="text" name='new_title' />
+    
+    <br>
+    <br>
+    <label>
+        Your new blog:</label>
+    <br>
+    <textarea name="new_entry" type='text' placeholder="Write something.." cols="50" rows="20"></textarea>
     <br>
     <input type="submit" value="Add Entry">
 </form>
+    <!--<hr />
 
-
-<!--Not sure if this is correct, need to test when running
-    {% if new_entry|length == 0 or new_title|length == 0 %}:
-    <form method="POST" action="/new"></form>-->
-
-
-
-
+    {% if new_entry|length == 0 or new_title|length == 0 %}
+    <p>No Blog Posts</p>
+    
+    {% endif %}-->
 
 
 {% endblock %}

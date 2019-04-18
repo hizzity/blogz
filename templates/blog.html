@@ -1,27 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<nav>
-    <ul>
-    <li>
-        <a href="blog.html">Main Blog Page</a>
-    </li>
-    <li>
-        <a href="newpost.html">Add an entry</a>
-    </li>          
-    </ul>
-</nav>
-    
+<style>
+div {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+</style>   
 <h1><center><strong>Build a Blog</strong></center></h1>
-<ul>
+
         
-        {% for blog in blogs: %}
+    {% if title|length and entry|length == 0 %}
+        <p>No blogs yet.</p>
+    {% else %}
+    <ul style="list-style-type:none;">
+        {% for blog in blogs %}
+          <div>
             <li><h3><a href ="single_blog.html">{{blog.title}}</a></h3></li>
             <li>{{blog.entry}}
                 <!--{{blog.id}} this does give the correct id number-->
             </li>
+        </div>
+        <br>
         {% endfor %}
+    {% endif %}
     </ul>
 
 

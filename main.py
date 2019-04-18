@@ -18,34 +18,29 @@ class Blog(db.Model):
         self.entry = entry
 
     def __str__(self):
-        return '<Blog {0}>'.format(self.name)  ##to see in python shell? not nec to run site
+        return '<Blog {0}>'.format(self.title)  ##to see in python shell? not nec to run site
 
-@app.route('/eachblog', methods=['POST'])
-# when click on a blog, 
-# get id number, use that to 
-# display the title and entry
-
+@app.route('/<blog_id>')  #blog_id in path? @app.route("/data/<section>") def data(section): assert section == request.view_args['section']
+def one_post(blog_id):
+    assert blog_id == Blog.query.get(title)
+    
+    return render_template('single_blog.html', blogs=blogs)
 
 
 @app.route('/new', methods=['POST','GET']) 
 def newpost():
-    return render_template("newpost.html")
-## after info entered: go to single_blog.html, with title and entry passed
-# ...need new function within this route? or need to route?
+    return render_template('/newpost.html')
+    
 
-# if request.method == 'GET':
-#    redirect ('/newpost.html')
-
-
-
-
-@app.route('/', methods=['POST','GET']) 
+@app.route('/blog', methods=['POST','GET']) 
 def index():
+    #this should add any new entries to the list of blogs...*should*
     if request.method == 'POST':
         new_title = request.form['new_title']
         new_entry = request.form['new_entry']
         db.session.add(new_title, new_entry)
         db.session.commit()
+        
     blogs = Blog.query.all()  # Blog.query.get(new_title) to get id of the new_title 
     return render_template("blog.html", blogs=blogs)
 
