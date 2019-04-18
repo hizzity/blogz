@@ -22,16 +22,17 @@ class Blog(db.Model):
 
 @app.route('/<blog_id>')  #blog_id in path? @app.route("/data/<section>") def data(section): assert section == request.view_args['section']
 def one_post(blog_id):
-    assert blog_id == Blog.query.get(title)
-    
-    return render_template('single_blog.html', blogs=blogs)
+    assert blog_id == int(request.form['title']  #'title' would be the one 'clicked' on
+    title = Blog.query.get(blog_id)   #TODO what goes in ()
+    entry = Blog.query.get(blog_id)   #TODO what goes in ()
+    return render_template('single_blog.html', title=title, entry=entry)
 
 
 @app.route('/new', methods=['POST','GET']) 
 def newpost():
     return render_template('/newpost.html')
+    #TODO route or redirect to /single_blog.html
     
-
 @app.route('/blog', methods=['POST','GET']) 
 def index():
     #this should add any new entries to the list of blogs...*should*
