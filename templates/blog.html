@@ -17,7 +17,7 @@ div {
     <ul style="list-style-type:none;">
         {% for blog in blogs %}
           <div>
-            <li><h3><a href ="single_blog.html">{{blog.title}}</a></h3></li>
+            <li><h3><a href="/single_blog">{{blog.title}}</a></h3></li> <!--instead of blog.title use session?-->
             <li>{{blog.entry}}
                 <!--{{blog.id}} this does give the correct id number-->
             </li>
