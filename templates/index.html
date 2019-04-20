@@ -19,6 +19,7 @@ div {
           <div>
             <li><h3><a href="/single_blog">{{blog.title}}</a></h3></li> <!--instead of blog.title use session?-->
             <li>{{blog.entry}}
+                <input type="hidden" name="blog_id" value="{{ blog.id }}"/>
                 <!--{{blog.id}} this does give the correct id number-->
             </li>
         </div>

@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:launchcode@localhost:8889/build-a-blog'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:launchcode@localhost:8891/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 
@@ -20,11 +20,14 @@ class Blog(db.Model):
     def __str__(self):
         return '<Blog {0}>'.format(self.title)  ##to see in python shell? not nec to run site
 
-@app.route('/?id=Blog.id')  #blog_id in path? @app.route("/data/<section>") def data(section): assert section == request.view_args['section']
+@app.route('/<blog_id>')  # ?id= blog_id in path? @app.route("/data/<section>") def data(section): assert section == request.view_args['section']
 def one_post(blog_id):
-    
+    blog_id = request.form['blog_id']  #TODO maybe use sessions instead?
+    title = session.query(Blog).get('blog_id')
+    entry = session.query(Blog).get('blog_id')
     return render_template('single_blog', title=title, entry=entry)
 
+#@app.route('/<blog_id>') the info I'm finding online
 
 @app.route('/newpost', methods=['POST','GET']) 
 def newpost():
@@ -42,7 +45,7 @@ def newpost():
 @app.route('/') 
 def index():     
     blogs = Blog.query.all()  # Blog.query.get(new_title) to get id of the new_title 
-    return render_template("/blog.html", blogs=blogs)
+    return render_template("/index.html", blogs=blogs)
 
 
 if __name__ == '__main__':
