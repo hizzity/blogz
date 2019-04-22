@@ -17,9 +17,9 @@ div {
     <ul style="list-style-type:none;">
         {% for blog in blogs %}
           <div>
-            <li><h3><a href="/single_blog">{{blog.title}}</a></h3></li> <!--instead of blog.title use session?-->
+            <li><h2><a href="/single_blog/"/a>{{blog.title}}</a></h2></li> <!--instead of blog.title use session?-->
             <li>{{blog.entry}}
-                <input type="hidden" name="blog_id" value="{{ blog.id }}"/>
+                <input type="hidden" name="blog_id" value="{{blog.id}}"/>
                 <!--{{blog.id}} this does give the correct id number-->
             </li>
         </div>
