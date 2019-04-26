@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:launchcode@localhost:8889/build-a-blog'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:launchcode@localhost:8889/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
 
@@ -12,13 +12,38 @@ class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200))
     entry = db.Column(db.String(1000))
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
 
     def __init__(self, title, entry): ##constructor 
         self.title = title
         self.entry = entry
+        self.owner = owner
 
     def __str__(self):
         return '<Blog {0}>'.format(self.title)  ##to see in python shell? not nec to run site
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50))
+    password = db.Column(db.String(50))
+    blogs = db.relationship('Blog', backref='username')   #TODO correct?
+
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+
+@app.route('/login')
+def login():
+    #TODO Use code from get it done
+
+@app.route('/signup')
+def signup():
+    #TODO use code from user signup for validation
+
+@app.route('/logout')
+def logout():
+    
 
 @app.route('/single_blog')  # ?id= blog_id in path?
 def one_post():
