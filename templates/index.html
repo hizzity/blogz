@@ -11,15 +11,16 @@ div {
 <h1><center><strong>Blog Users</strong></center></h1>
 
         
-    {% if username|length == 0 %}
+    {% if users|length == 0 %}
         <p>No users yet.</p>
     {% else %}
     <ul style="list-style-type:none;">
         {% for user in users %}
           <div>
-            <li><h2><a href="/single_blog?id={{blog.id}}"/a>{{blog.username}}</a></h2>
+            <li><h2>{{user.username}}</a></h2>
                 <!--why single_blog here....-->
                 <!--{{blog.id}} this does give the correct id number-->
+                <!--<a href="/single_blog?id={{blog.id}}"/a> need to add this back in-->
             </li>
         </div>
         <br>

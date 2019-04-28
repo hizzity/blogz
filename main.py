@@ -80,18 +80,22 @@ def validate():
             username_error = "Your username cannot contain spaces or be left blank."    
         if len(username) < 3 or len(username) > 20:
             username_error = "Your username must be between 3 and 20 characters."   
-        
+        #TODO check make sure username not already in data base, return error if so
+
+
         if username_error == '' and password_error == '' and password_same_error == '': 
             new_user = User(username, password)
             db.session.add(new_user)
             db.session.commit()
             session['username'] = username
-            return render_template("newpost.html", username = username)               
-        
+            return render_template("newpost.html", username = username)    
+
         else:
+
             return render_template("index.html", username = username,
             password_same_error = password_same_error, password_error = password_error,  
             username_error = username_error)
+
     if request.method == 'GET':
         return render_template('signup.html')    
 
