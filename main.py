@@ -1,12 +1,13 @@
-from flask import Flask, request, redirect, render_template
+from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
 import os
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:launchcode@localhost:8889/build-a-blog'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:launchcode@localhost:8889/blogz'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
+app.secret_key = 'y337kGcys&zP3B'
 
 class Blog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -15,10 +16,10 @@ class Blog(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
-    def __init__(self, title, entry): ##constructor 
+    def __init__(self, title, entry, owner): ##constructor 
         self.title = title
         self.entry = entry
-        self.owner = owner
+        self.owner = owner                    #correct, it is owner, not owner_id 
 
     def __str__(self):
         return '<Blog {0}>'.format(self.title)  ##to see in python shell? not nec to run site
@@ -27,23 +28,41 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50))
     password = db.Column(db.String(50))
-    blogs = db.relationship('Blog', backref='username')   #TODO correct?
+    blogs = db.relationship('Blog', backref='owner')   #correct
 
     def __init__(self, username, password):
         self.username = username
-        self.password = password
+        self.password = password                    
 
-@app.route('/login')
+#def get_user():                                       for flick list getting email by user
+#    return User.query.filter_by(email=session['user'])  #not complete, info from studio 4/25 
+# render_template('edit.html', watchlist=get_current)
+
+
+@app.route('/login', methods=['POST', 'GET'])
 def login():
-    #TODO Use code from get it done
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username).first()
+        if user and user.password == password:
+            session['username'] = username
+            flash("Logged in")
+            return redirect('/newpost')        #TODO test for correct username incorrect password 
+        else:                                  #TODO 
+            flash('User password incorrect, or user does not exist', 'error')
 
-@app.route('/signup')
-def signup():
+    return render_template('login.html')
+
+#@app.route('/signup')
+#def signup():
     #TODO use code from user signup for validation
 
-@app.route('/logout')
-def logout():
-    
+#@app.route('/logout')
+#def logout():
+#handles POST request to /logout and redirects user to /index (/blog in instructions)
+#after deleting the username from the session
+
 
 @app.route('/single_blog')  # ?id= blog_id in path?
 def one_post():
