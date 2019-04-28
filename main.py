@@ -44,48 +44,56 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        user = User.query.filter_by(username=username).first() #TODO does this test that the user is in database?
-        if user and user.password == password:
+        existing_user = User.query.filter_by(username=username).first() #TODO does this test that the user is in Blog database?
+        if existing_user and user.password == password:  #TODO this confuses me...
             session['username'] = username  #instructions tell me to put username in session
             return redirect('/newpost')     #logged in correctly and sent to /newpost  
-        if not user:                        #if username not in database return error message
+        if not existing_user:                        #if username not in database return error message
             error = "That username does not exist"  
             return redirect ('/login', error=error)  
-        
+        else:
+            password != User.query.get(existing_user)   #TODO how to get password of username entered.. 
+            error = "Incorrect password"                #does user.username = password for this user?
     else:                            #if GET request, direct to login page to fill out
         return render_template('login.html')
 
-@app.route('/signup', methods=['POST'])
-def signup():
+@app.route('/signup', methods=['POST','GET'])
+def validate():
+    if request.method == 'POST':
+        
+        username = request.form['username']
+        password = request.form['password']
+        password_user_verified = request.form['password_user_verified']
 
-    password_error = ''
-    password = request.form['password']
-    if (' ' in password) == True:
-        password_error = "Your password cannot contain spaces or be left blank."     
-    if len(password) < 3 or len(password) > 20:
-        password_error = "Your password must be between 3 and 20 characters."
+        password_error = ''
+        if (' ' in password) == True:
+            password_error = "Your password cannot contain spaces or be left blank."     
+        if len(password) < 3 or len(password) > 20:
+            password_error = "Your password must be between 3 and 20 characters."
 
-    password_same_error = ''
-    password_user_verified = request.form['password_user_verified']
-    password = request.form['password']
-    if password != password_user_verified:
-        password_same_error = "Passwords do not match."
+        password_same_error = ''
+        if password != password_user_verified:
+            password_same_error = "Passwords do not match."
 
-    username_error = ''
-    username = request.form['username']
-    if (' ' in username) == True:                                             
-        username_error = "Your username cannot contain spaces or be left blank."    
-    if len(username) < 3 or len(username) > 20:
-        username_error = "Your username must be between 3 and 20 characters."   
-    
-    if username_error == '' and password_error == '' and password_same_error == '':
-        return render_template("welcome.html", username = username)               
-    
-    else:
-        return render_template("index.html", username = username,
-        password_same_error = password_same_error, password_error = password_error,  
-        username_error = username_error)
-       
+        username_error = ''
+        if (' ' in username) == True:                                             
+            username_error = "Your username cannot contain spaces or be left blank."    
+        if len(username) < 3 or len(username) > 20:
+            username_error = "Your username must be between 3 and 20 characters."   
+        
+        if username_error == '' and password_error == '' and password_same_error == '': 
+            new_user = User(username, password)
+            db.session.add(new_user)
+            db.session.commit()
+            session['username'] = username
+            return render_template("newpost.html", username = username)               
+        
+        else:
+            return render_template("index.html", username = username,
+            password_same_error = password_same_error, password_error = password_error,  
+            username_error = username_error)
+    if request.method == 'GET':
+        return render_template('signup.html')    
 
 #@app.route('/logout')
 #def logout():
@@ -127,7 +135,7 @@ def newpost():
     
 @app.route('/') 
 def index():   
-    users = Blog.query.all()
+    users = User.query.all()
     return render_template("/index.html", users = users)   
     #blogs = Blog.query.all()  # Blog.query.get(new_title) to get id of the new_title 
     #return render_template("/index.html", blogs=blogs)

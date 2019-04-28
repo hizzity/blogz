@@ -1,6 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+
 <h1>Signup</h1>
         
-        <form action = "/validate" method = 'post'>
+        <form action = "/signup" method = 'post'>
             <label>
                 Username:
                 <input value='{{username}}' type='text' name='username' />
@@ -21,3 +25,5 @@
      
         <input type='submit', value='Submit'>
         </form>
+
+{% endblock %}
