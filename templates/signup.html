@@ -1,0 +1,23 @@
+<h1>Signup</h1>
+        
+        <form action = "/validate" method = 'post'>
+            <label>
+                Username:
+                <input value='{{username}}' type='text' name='username' />
+                <p><strong>{{username_error}}</strong></p>
+            </label>
+                            
+            <label>
+                Password:
+                <input type='password' name='password' />
+                <p><strong>{{password_error}}</strong></p>             
+            </label>
+                     
+            <label>
+                Verrify Password:
+                <input type='password' name='password_user_verified' />
+                <p><strong>{{password_same_error}}</strong></p>
+            </label>
+     
+        <input type='submit', value='Submit'>
+        </form>

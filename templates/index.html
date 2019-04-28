@@ -8,17 +8,17 @@ div {
   padding: 20px;
 }
 </style>   
-<h1><center><strong>Build a Blog</strong></center></h1>
+<h1><center><strong>Blog Users</strong></center></h1>
 
         
-    {% if title|length and entry|length == 0 %}
-        <p>No blogs yet.</p>
+    {% if username|length == 0 %}
+        <p>No users yet.</p>
     {% else %}
     <ul style="list-style-type:none;">
-        {% for blog in blogs %}
+        {% for user in users %}
           <div>
-            <li><h2><a href="/single_blog?id={{blog.id}}"/a>{{blog.title}}</a></h2></li> <!--instead of blog.title use session?-->
-            <li>{{blog.entry}}
+            <li><h2><a href="/single_blog?id={{blog.id}}"/a>{{blog.username}}</a></h2>
+                <!--why single_blog here....-->
                 <!--{{blog.id}} this does give the correct id number-->
             </li>
         </div>
