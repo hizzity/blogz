@@ -15,13 +15,21 @@
             <a href="/">All Posts</a> <!--TODO needs to link to all posts html page-->
         </li>
         <li>
-            <a href="/newpost">Add an entry</a>
+            {% if session['username'] %}
+            <a href="/newpost">Add a new entry</a>
+            {% endif %}
         </li>
         <li>
+            {% if not session['username'] %}
             <a href="/login">Login</a>
+            {% endif %}
+            <!-- Login link will only appear if a user is not
+             already logged in -->
         </li>
-        <li> 
-            <a href="/logout">Logout</a> 
+        <li>
+            {% if session['username'] %}
+            <a href='/'>Logout</a>
+            {% endif %}
         </li>
         </ul>
     </nav>

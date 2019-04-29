@@ -99,9 +99,9 @@ def validate():
     if request.method == 'GET':
         return render_template('signup.html')    
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout')
 def logout():
-    del session['user']
+    del session['username']
     return redirect('/index')
 #handles POST request to /logout and redirects user to /index (/blog in instructions)
 #after deleting the username from the session
@@ -117,34 +117,34 @@ def one_post():
 @app.route('/newpost', methods=['POST','GET']) 
 def newpost():
     if request.method == 'GET':           #from class 4/18
-        return render_template('/newpost.html')
+        return render_template('newpost.html')
     else:
         title = request.form['new_title']
         entry = request.form['new_entry']
         if title == '' and entry == '':
             error = "Please enter a title."
             entry_error = "The blog entry can not be left blank"
-            return render_template('/newpost.html', error=error, entry_error=entry_error)
+            return render_template('newpost.html', error=error, entry_error=entry_error)
         elif title == '':
             error = "Please enter a title."
-            return render_template('/newpost.html', error=error)
+            return render_template('newpost.html', error=error)
         elif entry == '':
             entry_error = "The blog entry can not be left blank"
-            return render_template('/newpost.html', entry_error=entry_error)
+            return render_template('newpost.html', entry_error=entry_error)
         else:
             #passes info from new post to /single_blog and commits the new blog to the database
             blog = Blog(title,entry)
             db.session.add(blog)
             db.session.commit()
-        return render_template('/single_blog.html', blog=blog)
+        return render_template('single_blog.html', blog=blog)
  
     
 @app.route('/') 
 def index():   
     users = User.query.all()
-    return render_template("/index.html", users = users)   
+    return render_template('index.html', users = users)   
     #blogs = Blog.query.all()  # Blog.query.get(new_title) to get id of the new_title 
-    #return render_template("/index.html", blogs=blogs)
+    #return render_template("index.html", blogs=blogs)
 
 
 if __name__ == '__main__':

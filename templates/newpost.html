@@ -3,7 +3,7 @@
 {% block content %}
 
 
-<h1><centered><strong>Add a Blog Entry {{username}}!</strong></centered></h1>
+<h1><centered><strong>Add a Blog Entry {{session['username']}}!</strong></centered></h1>
 <form action="/newpost" method='post'>
     <label>
         

@@ -17,10 +17,7 @@ div {
     <ul style="list-style-type:none;">
         {% for user in users %}
           <div>
-            <li><h2>{{user.username}}</a></h2>
-                <!--why single_blog here....-->
-                <!--{{blog.id}} this does give the correct id number-->
-                <!--<a href="/single_blog?id={{blog.id}}"/a> need to add this back in-->
+            <li><h2><a href="/singleUser">{{user.username}}</a></h2>
             </li>
         </div>
         <br>
