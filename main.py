@@ -44,17 +44,18 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        existing_user = User.query.filter_by(username=username).first() #TODO does this test that the user is in Blog database?
-        if existing_user and user.password == password:  #TODO this confuses me...
+        user = User.query.filter_by(username=username).first() #TODO does this test that the user is in Blog database?
+        if user and user.password == password:  #TODO this confuses me...
             session['username'] = username  #instructions tell me to put username in session
             return redirect('/newpost')     #logged in correctly and sent to /newpost  
-        if not existing_user:                        #if username not in database return error message
+        if not user:                        #if username not in database return error message
             error = "That username does not exist"  
             return redirect ('/login', error=error)  
         else:
-            password != User.query.get(existing_user)   #TODO how to get password of username entered.. 
-            error = "Incorrect password"                #does user.username = password for this user?
-    else:                            #if GET request, direct to login page to fill out
+            password != user.password        #checks to make sure the correct password was entered
+            error = "Incorrect password"
+            return redirect ('/login', error=error)
+    else:                                    #if GET request, direct to login page to fill out
         return render_template('login.html')
 
 @app.route('/signup', methods=['POST','GET'])
