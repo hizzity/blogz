@@ -99,8 +99,10 @@ def validate():
     if request.method == 'GET':
         return render_template('signup.html')    
 
-#@app.route('/logout')
-#def logout():
+@app.route('/logout', methods=['POST'])
+def logout():
+    del session['user']
+    return redirect('/index')
 #handles POST request to /logout and redirects user to /index (/blog in instructions)
 #after deleting the username from the session
 
