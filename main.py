@@ -26,13 +26,19 @@ class Blog(db.Model):
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50))
+    username = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(50))
     blogs = db.relationship('Blog', backref='owner')   #correct
 
     def __init__(self, username, password):
         self.username = username
         self.password = password                    
+
+@app.before_request
+def require_login():
+    allowed_routes = ['login','validate','blog','index'] #allowed functions not the decorator (decorator is @app.blah)
+    if request.endpoint not in allowed_routes and 'username' not in session:
+        return redirect('/login') 
 
 #def get_user():                                       for flick list getting email by user
 #    return User.query.filter_by(email=session['user'])  #not complete, info from studio 4/25 
@@ -45,16 +51,17 @@ def login():
         username = request.form['username']
         password = request.form['password']
         user = User.query.filter_by(username=username).first() #TODO does this test that the user is in Blog database?
-        if user and user.password == password:  #TODO this confuses me...
+        if user and user.password == password:  
             session['username'] = username  #instructions tell me to put username in session
             return redirect('/newpost')     #logged in correctly and sent to /newpost  
         if not user:                        #if username not in database return error message
             error = "That username does not exist"  
-            return redirect ('/login', error=error)  
+            return render_template ('login.html', error=error)  
         else:
             password != user.password        #checks to make sure the correct password was entered
+            session['username'] = username
             error = "Incorrect password"
-            return redirect ('/login', error=error)
+            return render_template ('login.html', error=error)
     else:                                    #if GET request, direct to login page to fill out
         return render_template('login.html')
 
@@ -103,7 +110,7 @@ def validate():
 @app.route('/logout')
 def logout():
     del session['username']
-    return redirect('/index')
+    return redirect('/blog')
 #handles POST request to /logout and redirects user to /index (/blog in instructions)
 #after deleting the username from the session
 
@@ -139,8 +146,22 @@ def newpost():
             db.session.commit()
         return render_template('single_blog.html', blog=blog)
  
-    
-@app.route('/') 
+@app.route('/', methods=['POST','GET'])
+def index2():
+
+    owner = User.query.filter_by(username=session['username']).first()
+
+    if request.method == 'POST':
+        blog_title = request.form['title']
+        blog_entry = request.form['entry']
+        new_blog = Blog(blog_title, blog_entry, owner)
+        db.session.add(new_blog)
+        db.session.commit()  
+
+    return render_template('single_blog', blog_title=blog_title , blog_entry=blog_entry) 
+
+
+@app.route('/blog') 
 def index():   
     users = User.query.all()
     return render_template('index.html', users = users)   
