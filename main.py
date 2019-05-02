@@ -36,7 +36,7 @@ class User(db.Model):
 
 @app.before_request
 def require_login():
-    allowed_routes = ['blog','login','validate'] #allowed functions not the decorator (decorator is @app.blah)
+    allowed_routes = ['index','blog','login','validate'] #allowed functions not the decorator (decorator is @app.blah)
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login') 
 
@@ -110,17 +110,9 @@ def validate():
 @app.route('/logout')
 def logout():
     del session['username']
-    return redirect('/blog')
+    return redirect('/')
 #handles POST request to /logout and redirects user to /blog
 #after deleting the username from the session
-
-
-@app.route('/single_blog')  # ?id= blog_id in path?
-def one_post():
-    user_id = request.args.get('id')      
-    blog = Blog.query.get(user_id) 
-    return render_template('single_blog.html', blog=blog)
-
 
 @app.route('/newpost', methods=['POST','GET']) 
 def newpost():
@@ -147,9 +139,8 @@ def newpost():
             db.session.commit()
         return render_template('single_blog.html', blog=blog)
  
-@app.route('/', methods=['POST','GET'])
-def index():
-
+@app.route('/blog', methods=['POST','GET'])
+def blog():
     owner = User.query.filter_by(username=session['username']).first()
 
     if request.method == 'POST':
@@ -159,19 +150,44 @@ def index():
         db.session.add(new_blog)
         db.session.commit()  
 
-    return render_template('single_blog', blog_title=blog_title , blog_entry=blog_entry) 
+    blogs = Blog.query.filter_by(owner).all()
 
-@app.route('/singleUser')
-def singleUser():   
-    blogs = Blog.query.get(owner_id).first()  #TODO query all blogs for session['username']
-    return render_template('singleUser.html', blogs = blogs)  
+    return render_template('singleUser.html', blogs=blogs) 
 
-@app.route('/blog') 
-def blog():   
+# from build-a-blog, code for cycling through each blog
+#@app.route('/single_blog')  # ?id= blog_id in path?
+#def one_post():
+#    user_id = request.args.get('id')      
+#    blog = Blog.query.get(user_id) 
+#    return render_template('single_blog.html', blog=blog)
+
+@app.route('/singleUser') 
+#TODO this is printing all blog posts, not blogs by this user
+def all_blogs_one_user():
+    blogs = Blog.query.all()
+    blog_id = request.args.get('id')    
+    owner_id = request.args.get('owner')   
+    
+    return render_template('singleUser.html', blogs=blogs)
+
+@app.route('/allposts')
+def allposts():
+    blogs = Blog.query.all()  
+    return render_template('allposts.html', blogs=blogs)
+
+
+@app.route('/') 
+def index():
     users = User.query.all()
-    return render_template('blog.html', users = users)   
-    #blogs = Blog.query.all()  # Blog.query.get(new_title) to get id of the new_title 
-    #return render_template("blog.html", blogs=blogs)
+    user_id = request.args.get('id')
+
+    if user_id:
+        owner = User.query.get(user_id)
+        blogs = Blog.query.filter_by(owner=owner).all()
+        return render_template('singleUser.html', owner=owner, blogs=blogs)
+    
+    return render_template('blog.html', users=users)   
+ 
 
 
 if __name__ == '__main__':
