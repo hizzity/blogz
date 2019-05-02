@@ -12,7 +12,7 @@
             <a href="/blog">Home</a>
         </li>
         <li>
-            <a href="/">All Posts</a> <!--TODO needs to link to all posts html page-->
+            <a href="/singleUser">All Posts</a> <!--TODO needs to link to all posts html page-->
         </li>
         <li>
             {% if session['username'] %}
@@ -28,7 +28,7 @@
         </li>
         <li>
             {% if session['username'] %}
-            <a href='/logout'>Logout</a>
+            <a href='/logout'>Logout here {{session['username']}}</a>
             {% endif %}
         </li>
         </ul>

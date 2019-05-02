@@ -36,7 +36,7 @@ class User(db.Model):
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login','validate','blog','index'] #allowed functions not the decorator (decorator is @app.blah)
+    allowed_routes = ['blog','login','validate'] #allowed functions not the decorator (decorator is @app.blah)
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login') 
 
@@ -100,7 +100,7 @@ def validate():
 
         else:
 
-            return render_template("index.html", username = username,
+            return render_template("blog.html", username = username,
             password_same_error = password_same_error, password_error = password_error,  
             username_error = username_error)
 
@@ -111,7 +111,7 @@ def validate():
 def logout():
     del session['username']
     return redirect('/blog')
-#handles POST request to /logout and redirects user to /index (/blog in instructions)
+#handles POST request to /logout and redirects user to /blog
 #after deleting the username from the session
 
 
@@ -141,13 +141,14 @@ def newpost():
             return render_template('newpost.html', entry_error=entry_error)
         else:
             #passes info from new post to /single_blog and commits the new blog to the database
-            blog = Blog(title,entry)
+            owner = User.query.filter_by(username=session['username']).first()
+            blog = Blog(title,entry,owner)
             db.session.add(blog)
             db.session.commit()
         return render_template('single_blog.html', blog=blog)
  
 @app.route('/', methods=['POST','GET'])
-def index2():
+def index():
 
     owner = User.query.filter_by(username=session['username']).first()
 
@@ -160,13 +161,17 @@ def index2():
 
     return render_template('single_blog', blog_title=blog_title , blog_entry=blog_entry) 
 
+@app.route('/singleUser')
+def singleUser():   
+    blogs = Blog.query.get(owner_id).first()  #TODO query all blogs for session['username']
+    return render_template('singleUser.html', blogs = blogs)  
 
 @app.route('/blog') 
-def index():   
+def blog():   
     users = User.query.all()
-    return render_template('index.html', users = users)   
+    return render_template('blog.html', users = users)   
     #blogs = Blog.query.all()  # Blog.query.get(new_title) to get id of the new_title 
-    #return render_template("index.html", blogs=blogs)
+    #return render_template("blog.html", blogs=blogs)
 
 
 if __name__ == '__main__':
