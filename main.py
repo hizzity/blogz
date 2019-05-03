@@ -36,7 +36,7 @@ class User(db.Model):
 
 @app.before_request
 def require_login():
-    allowed_routes = ['index','blog','login','validate'] #allowed functions not the decorator (decorator is @app.blah)
+    allowed_routes = ['index','blog','login','validate','allposts'] #allowed functions not the decorator (decorator is @app.blah)
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login') 
 
@@ -142,6 +142,7 @@ def newpost():
 @app.route('/blog', methods=['POST','GET'])
 def blog():
     owner = User.query.filter_by(username=session['username']).first()
+    
 
     if request.method == 'POST':
         blog_title = request.form['title']
@@ -173,6 +174,13 @@ def all_blogs_one_user():
 @app.route('/allposts')
 def allposts():
     blogs = Blog.query.all()  
+    blog_id = request.args.get('id')
+    user_id = request.args.get('owner_id')
+    if blog_id:
+        blogs = Blog.query.filter_by(id=blog_id)
+        return render_template('allposts.html', blogs=blogs)
+        title = "One blog"   #TODO fix
+
     return render_template('allposts.html', blogs=blogs)
 
 

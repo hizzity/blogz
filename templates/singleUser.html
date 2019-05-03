@@ -8,8 +8,6 @@ div {
   padding: 20px;
 }
 </style>   
-<h1><center><strong>Blogs by {{owner}}</strong></center></h1>
-
         
     {% if blogs|length == 0 %}
         <p>No blog entries yet.</p>
@@ -17,7 +15,8 @@ div {
     <ul style="list-style-type:none;">
         {% for blog in blogs %}
           <div>
-            <li><h2><a href="/blog?id={{blog.id}}">{{blog.title}}</a></h2></li> 
+            <li><h2><a href="/allposts?id={{blog.id}}">{{blog.title}}</a></h2></li> 
+            <h4>By: {{blog.owner.username}}</h4>
             <p>{{blog.entry}}</p>
         </div>
         <br>
