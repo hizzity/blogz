@@ -179,8 +179,8 @@ def allposts():
     if blog_id:
         blogs = Blog.query.filter_by(id=blog_id)
         return render_template('allposts.html', blogs=blogs)
-        title = "One blog"   #TODO fix
-
+    if user_id:
+        blogs = Blog.query.filter_by(owner_id=user_id)
     return render_template('allposts.html', blogs=blogs)
 
 

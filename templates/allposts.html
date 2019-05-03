@@ -16,7 +16,7 @@ div {
             <li><h2><a href="/allposts?id={{blog.id}}">{{blog.title}}</a></h2></li>
             </li>
             <li><h3>{{blog.entry}}</h3></li>
-            <p>written by: {{blog.owner.username}}</p>
+            <p><a href="/allposts?owner_id={{blog.owner_id}}">written by: {{blog.owner.username}}</a></p>
         </div>
         <br>
         {% endfor %}
